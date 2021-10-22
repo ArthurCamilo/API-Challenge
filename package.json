@@ -1,0 +1,28 @@
+{
+  "name": "API-Challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurCamilo/API-Challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArthurCamilo/API-Challenge/issues"
+  },
+  "homepage": "https://github.com/ArthurCamilo/API-Challenge#readme",
+  "devDependencies": {
+    "eslint": "^8.0.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg-promise": "^10.11.1"
+  }
+}
