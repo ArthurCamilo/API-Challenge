@@ -1,10 +1,15 @@
-const pgp = require('pg-promise')();
-const db = pgp({
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	host: process.env.DB_HOST,
-	port: process.env.DB_PORT,
-	database: process.env.DB_NAME
+const { Sequelize } = require('sequelize');
+
+const username = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
+
+const sequelize = new Sequelize(database, username, password, {
+    host: host,
+    port: port,
+    dialect: 'postgres'
 });
 
-module.exports = db;
+module.exports = sequelize;
