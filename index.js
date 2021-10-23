@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const favoredAccountRoutes = require('./server/routes/favoredAccountRoutes');
+const favoredAccountRoutes = require('./src/routes/favoredAccountRoutes');
 
 app.use(favoredAccountRoutes);
 

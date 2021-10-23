@@ -7,6 +7,16 @@ const FavoredAccount = sequelize.define('FavoredAccount', {
         allowNull: false,
         key: true
     },
+    bankCode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        key: true
+    },
+    bankAccountType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        key: true
+    },
     fullName: {
         type: DataTypes.STRING,
         allowNull: false
@@ -17,10 +27,6 @@ const FavoredAccount = sequelize.define('FavoredAccount', {
     },
     status: {
         type: DataTypes.TINYINT,
-        allowNull: false
-    },
-    bankCode: {
-        type: DataTypes.STRING,
         allowNull: false
     },
     bankAgency: {

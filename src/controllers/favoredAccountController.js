@@ -1,7 +1,7 @@
 const { default: BankAccountFactory } = require('../domain/bankAccountFactory');
 const FavoredAccountRepository = require('../repositories/favoredAccountRepository');
 
-function createBankAccountAndValidate (payload) {
+const createBankAccountAndValidate = (payload) => {
     const { bankCode, bankAgency, bankAgencyDigit, bankAccountCode, bankAccountDigit, bankAccountType } = payload;
     const bankAccount = BankAccountFactory.createBankAccount(bankCode, bankAgency, bankAgencyDigit, bankAccountCode, bankAccountDigit, bankAccountType);
     bankAccount.validate();
@@ -24,9 +24,7 @@ const create = async (req) => {
         const favoredAccount = await FavoredAccountRepository.create(req.payload);
         res.send(favoredAccount);
     } catch (ex) {
-        res.status(400).send({
-            message: ex.ExceptionMessage
-        })
+        res.status(400).send(e)
     }
 };
 
@@ -35,10 +33,8 @@ const update = async (req, res) => {
         createBankAccountAndValidate(req.payload);
         const favoredAccount = await FavoredAccountRepository.update(req.payload);
         res.send(favoredAccount);
-    } catch (ex) {
-        res.status(400).send({
-            message: ex.ExceptionMessage
-        })
+    } catch (e) {
+        res.status(400).send(e)
     }
 };
 
