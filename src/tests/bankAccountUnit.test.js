@@ -1,95 +1,115 @@
 const BankAccountFactory = require("../domain/bankAccountFactory");
 const bankAccountTypes = require("../utils/bankAccountTypes");
+const statusTypes = require("../utils/statusTypes");
+
+const createStandardBankAccount = () => {
+    return BankAccountFactory.createBankAccount('33365704680', 'Arthur Camilo', 'arthurpaivacamilo@gmail.com', 'RASCUNHO', '104', '0814', '0', '01002713', '9', bankAccountTypes.CONTA_CORRENTE);
+};
+
+test('Should not allow invalid account information', async = () => {
+    let bankAccount = createStandardBankAccount();
+    bankAccount.email = null;
+    bankAccount.fullName = null;
+    bankAccount.identification = null;
+    bankAccount.status = null;
+    expect(() => {
+        bankAccount.validate();
+    }).toThrow(Error);
+});
 
 test('Should not allow CONTA_FACIL to a bank that is not Banco do Brasil', async = () => {
 
-    const bankAccount1 = BankAccountFactory.createBankAccount('104', '0814', '0', '01002713', '9', bankAccountTypes.CONTA_FACIL);
+    let bankAccount1 = createStandardBankAccount();
+    bankAccount1.accountType = bankAccountTypes.CONTA_FACIL;
     expect(() => {
         bankAccount1.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('001', '0814', '0', '01002713', '9', bankAccountTypes.CONTA_FACIL);
-    let validation2 = bankAccount2.validate();
+    let bancoDoBrasil = BankAccountFactory.createBankAccount('11068155990', 'Arthur Camilo', 'arthurpaivacamilo@gmail.com', statusTypes.RASCUNHO, '001', '0814', '0', '01002713', '9', bankAccountTypes.CONTA_FACIL);
+    let validation2 = bancoDoBrasil.validate();
     expect(validation2).toBe(true);
 
 });
 
 test('Should not allow invalid account digit', async () => {
 
-    const bankAccount1 = BankAccountFactory.createBankAccount('104', '0814', '0', '01002713', '100', bankAccountTypes.CONTA_CORRENTE);
+    let bankAccount1 = createStandardBankAccount();
+    bankAccount1.accountDigit = '100';
     expect(() => {
         bankAccount1.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('104', '0814', '0', '01002713', 'abc', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount1.accountDigit = 'abc';
     expect(() => {
-        bankAccount2.validate();
+        bankAccount1.validate();
     }).toThrow(Error);
 
-    const bankAccount3 = BankAccountFactory.createBankAccount('104', '0814', '0', '01002713', '', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount1.accountDigit = '';
     expect(() => {
-        bankAccount3.validate();
+        bankAccount1.validate();
     }).toThrow(Error);
 });
 
 test('Should not allow invalid account code', async () => {
 
-    const bankAccount1 = BankAccountFactory.createBankAccount('104', '0814', '0', '', '2', bankAccountTypes.CONTA_CORRENTE);
+    let bankAccount1 = createStandardBankAccount();
+    bankAccount1.accountCode = '';
     expect(() => {
         bankAccount1.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('104', '0814', '0', 'abc', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount1.accountCode = 'abc';
     expect(() => {
-        bankAccount2.validate();
+        bankAccount1.validate();
     }).toThrow(Error);
 
-
-    const bankAccount3 = BankAccountFactory.createBankAccount('104', '0814', '0', '22222222222222222', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount1.accountCode = '22222222222222222';
     expect(() => {
-        bankAccount3.validate();
+        bankAccount1.validate();
     }).toThrow(Error);
 
 });
 
 test('Should not allow invalid agency digit', async () => {
-
-    const bankAccount1 = BankAccountFactory.createBankAccount('104', '0814', '10', '01002713', '3', bankAccountTypes.CONTA_CORRENTE);
+    
+    let bankAccount = createStandardBankAccount();
+    bankAccount.agencyDigit = '10';
     expect(() => {
-        bankAccount1.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('104', '0814', '-2', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.agencyDigit = '-2';
     expect(() => {
-        bankAccount2.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
-    const bankAccount3 = BankAccountFactory.createBankAccount('104', '0814', '', '01002713', '1', bankAccountTypes.CONTA_CORRENTE);
-    expect(bankAccount3.validate()).toBe(true);
+    bankAccount.agencyDigit = '';
+    expect(bankAccount.validate()).toBe(true);
 
-    const bankAccount4 = BankAccountFactory.createBankAccount('104', '0814', 'abc', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.agencyDigit = 'abc';
     expect(() => {
-        bankAccount4.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
 });
 
 test('Should not allow invalid agency code', async () => {
 
-    const bankAccount1 = BankAccountFactory.createBankAccount('104', '450814', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    let bankAccount = createStandardBankAccount();
+    bankAccount.agencyCode = '450814';
     expect(() => {
-        bankAccount1.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('104', '0814a', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.agencyCode = '0814a';
     expect(() => {
-        bankAccount2.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
 
-    const bankAccount3 = BankAccountFactory.createBankAccount('104', '', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.agencyCode = '';
     expect(() => {
-        bankAccount3.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
 });
@@ -97,20 +117,20 @@ test('Should not allow invalid agency code', async () => {
 
 test('Should not allow invalid bank code', async () => {
 
-    const bankAccount1 = BankAccountFactory.createBankAccount('', '45814', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    let bankAccount = createStandardBankAccount();
+    bankAccount.bankCode = '';
     expect(() => {
-        bankAccount1.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
-    const bankAccount2 = BankAccountFactory.createBankAccount('104a', '0814', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.bankCode = '104a';
     expect(() => {
-        bankAccount2.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
-
-    const bankAccount3 = BankAccountFactory.createBankAccount('1046', '0456', '0', '01002713', '2', bankAccountTypes.CONTA_CORRENTE);
+    bankAccount.bankCode = '1046';
     expect(() => {
-        bankAccount3.validate();
+        bankAccount.validate();
     }).toThrow(Error);
 
 });

@@ -3,8 +3,8 @@ const BankAccount =  require("./bankAccount");
 
 class BancoDoBrasilAccount extends BankAccount {
 
-    constructor (bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
-        super(bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
+    constructor (identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
+        super(identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
         this.availableAccounts.push(bankAccountTypes.CONTA_FACIL);
     }
     

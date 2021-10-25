@@ -1,15 +1,15 @@
 const BancoDoBrasilAccount = require('./bancoDoBrasilAccount');
 const BankAccount = require('./bankAccount');
 
-module.exports = class BankAccountFactory {
-
-    static createBankAccount(bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
+class BankAccountFactory {
+    static createBankAccount(identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
         switch (bankCode) {
             case '001':
-                return new BancoDoBrasilAccount(bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
+                return new BancoDoBrasilAccount(identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
             default:
-                return new BankAccount(bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
+                return new BankAccount(identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType);
         }
     }
-
 }
+
+module.exports = BankAccountFactory;

@@ -1,8 +1,15 @@
 const bankAccountTypes =  require('../utils/bankAccountTypes');
+const statusTypes = require('../utils/statusTypes');
+const { isNullOrEmpty, validateCPF, validateEmail } = require('../utils/commonValidation');
+require('dotenv/config');
 
 class BankAccount {
 
-    constructor (bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
+    constructor (identification, fullName, email, status, bankCode, agencyCode, agencyDigit, accountCode, accountDigit, accountType) {
+        this.identification = identification;
+        this.fullName = fullName;
+        this.email = email;
+        this.status = status;
         this.bankCode = bankCode;
         this.agencyCode = agencyCode;
         this.agencyDigit = agencyDigit;
@@ -14,20 +21,46 @@ class BankAccount {
 
     validate () {
         try {
-            const isBankCodeValid = this.validateBankCode();
-            const isAgencyCodeValid = this.validateAgencyCode();
-            const isAgencyDigitValid = this.validateAgencyDigit();
-            const isAccountCodeValid = this.validateAccountCode();
-            const isAccountDigitValid = this.validateAccountDigit();
-            const isAccountTypeValid = this.validateAccountType();
-            return isBankCodeValid && isAgencyCodeValid && isAgencyDigitValid && isAccountCodeValid && isAccountDigitValid && isAccountTypeValid;
+            this.validateBasicInfo();
+            this.validateBankCode();
+            this.validateAgencyCode();
+            this.validateAgencyDigit();
+            this.validateAccountCode();
+            this.validateAccountDigit();
+            this.validateAccountType();
+            return true;
         } catch (e) {
             throw e;
         }
     };
 
+    validateBasicInfo () {
+        if (!validateCPF(this.identification)) {
+            throw new Error('Invalid indentification code (CPF)');
+        }
+        if (!validateEmail(this.email)) {
+            throw new Error('Invalid email format, check for typing errors');
+        }
+        if (isNullOrEmpty(this.fullName)) {
+            throw new Error('Full name was not filled');
+        }
+        this.validateStatus();
+        return true;
+    };
+    
+    validateStatus () {
+        if (isNullOrEmpty(this.status)) {
+            throw new Error('Account status was not filled');
+        } else {
+            const containsStatus = [statusTypes.RASCUNHO, statusTypes.VALIDADO].includes(this.status);  
+            if (!containsStatus) {
+                throw new Error(`Status ${this.status} is not a valid status`);
+            } else return true;
+        }
+    }
+
     validateBankCode () {
-        if (!this.bankCode) {
+        if (isNullOrEmpty(this.bankCode)) {
             throw new Error ('Destiny bank was not filled');
         } else {
             const reExp = /^(?:^0*)[1-9][0-9]{0,2}$/;
@@ -39,7 +72,7 @@ class BankAccount {
     };
 
     validateAgencyCode () {
-        if (!this.agencyCode) {
+        if (isNullOrEmpty(this.agencyCode)) {
             throw new Error ('Agency code was not filled');
         } else {
             const reExp = /^(?:^0*)[1-9][0-9]{0,3}$/;
@@ -51,7 +84,7 @@ class BankAccount {
     };
 
     validateAgencyDigit () {
-        if (!this.agencyDigit) {
+        if (isNullOrEmpty(this.agencyDigit)) {
             return true;
         } else {
             const reExp = /^[xX0-9]{0,1}$/;
@@ -63,7 +96,7 @@ class BankAccount {
     };
 
     validateAccountCode () {
-        if (!this.accountCode) {
+        if (isNullOrEmpty(this.accountCode)) {
             throw new Error('Account code was not filled');
         } else {
             const reExp = /^(?:^0*)[1-9][0-9]{0,10}$/;
@@ -75,7 +108,7 @@ class BankAccount {
     };
 
     validateAccountDigit () {
-        if (!this.accountDigit) {
+        if (isNullOrEmpty(this.accountDigit)) {
             throw new Error('Account digit was not filled')
         } else {
             const reExp = /^[0-9]{0,1}$/
@@ -87,12 +120,12 @@ class BankAccount {
     };
 
     validateAccountType () {
-        if (!this.accountType) {
+        if (isNullOrEmpty(this.accountType)) {
             throw new Error('Account type was not selected');
         } else {
             const availableAccountType = this.availableAccounts.includes(this.accountType);
             if (!availableAccountType)
-                throw new Error('Account type %s is not available for this bank option', this.accountType);
+                throw new Error(`Account type ${this.accountType} is not available for this bank option`);
             else return true;
         }
     };

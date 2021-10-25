@@ -1,20 +1,26 @@
-import sequelize from '../database';
+const sequelize = require('../database');
 const { DataTypes } = require('sequelize');
+require('dotenv/config');
 
-const Bank = sequelize.define('Bank', {
+const banks = sequelize.define('banks', {
     code: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
-        key: true
+        primaryKey: true
     },
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     logo: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     }
+}, {
+    sequelize,
+    schema: process.env.DB_SCHEMA,
+    timestamps: false,
+    underscored: true
 });
 
-module.exports = Bank;
+module.exports = banks;
