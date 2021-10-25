@@ -51,3 +51,7 @@ Preencha todas as variáveis de ambiente para o express e acesso ao banco de dad
 ## Testes
 Para executar os testes unitários e de integração, execute em seu terminal o comando:
 `npm test`
+
+## Executando
+Para executar a aplicação, execute em seu terminal o comando:
+`npm start`
